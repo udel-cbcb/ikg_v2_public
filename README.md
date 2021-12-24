@@ -56,7 +56,8 @@ docker exec -it ikg-dev /bin/bash
 det experiment create configs/triples_walk_embedder_const_mul_seeds.yaml .
 ```
 
-5. Once the training is complete, retrieve the embeddings from checkpoint folder. The embeddings will be in the form `protein_embedding_{fold_number}.csv`.
+5. Once the training is complete, retrieve the embeddings from checkpoint folder. The embeddings will be in the form
+   `protein_head_embeddings_{fold_number}.csv` and `protein_tail_embeddings_{fold_number}.csv`.
 
 
 6. To generate predictions use the polyaxon configs to run the prediction tasks on the kubernetes cluster.
