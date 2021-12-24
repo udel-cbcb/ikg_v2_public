@@ -9,7 +9,6 @@
 5. GPU with support for CUDA 10 and atleast 16 GB memory (RTX A4000)
 
 <br />
-<br />
 
 ### Folder Structure
 `src/data` - Source code of the scripts used for generating data for experiments. \
@@ -19,7 +18,6 @@
 `polyaxon_configs` - Polyaxon configuration files for running experiments on the k8s cluster. \
 `main.py` - Entry point script used to run scripts locally.
 
-<br />
 <br />
 
 ### Getting started.
