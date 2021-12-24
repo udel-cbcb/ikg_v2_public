@@ -1,0 +1,54 @@
+name: Triples walk hetero HPtune task - CB
+description: Task to determine hyper params for triple walk on hetero graph using CBOW model
+bind_mounts:
+  - container_path: /root/data/ikg_v2_data
+    host_path: /home/sachin/Projects/ikg_v2_data
+    propagation: ''
+    read_only: true
+data:
+    fold_n: "0"
+    sample_targets: true
+hyperparameters:
+    global_batch_size: 128
+    embedding_dim:
+        type: categorical
+        vals: [64,80,96,128,256]
+    learning_rate:
+        type: double
+        minval: 0.0001
+        maxval: 0.001
+    walk_length:
+        type: int
+        minval: 10
+        maxval: 40
+    walks_per_node:
+        type: int
+        minval: 5
+        maxval: 10
+    context_size:
+        type: categorical
+        vals: [2,4,6,8,10,12]
+    num_negatives:
+        type: int
+        minval: 1
+        maxval: 9
+    edge_op: hd
+    early_stopping_delta: 0.001
+    early_stopping_patience: 10
+records_per_epoch: 43907
+searcher:
+    name: adaptive_asha
+    metric: roc_score_link_pred
+    smaller_is_better: false
+    max_length:
+        epochs: 50
+    max_trials: 50
+min_validation_period:
+    epochs: 1
+checkpoint_policy: none
+resources:
+    slots_per_trial: 1
+entrypoint: src.model.hetero_embedding.triple_walk_embedder_cbow:TripleWalkEmbedderCbow
+max_restarts: 0
+environment:
+  image: "sachinx0e/ikg:4.7"

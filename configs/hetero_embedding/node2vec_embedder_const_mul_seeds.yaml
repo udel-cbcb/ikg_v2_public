@@ -1,0 +1,40 @@
+name: Node2Vec hetero embedding task - (MUL_SEEDS)
+description: Task to create embeddings using node2vec on hetero graph using multiple seeds
+bind_mounts:
+  - container_path: /root/data/ikg_v2_data
+    host_path: /home/sachin/Projects/ikg_v2_data
+    propagation: ''
+    read_only: true
+hyperparameters:
+    global_batch_size: 128
+    embedding_dim: 128
+    learning_rate: 0.00087
+    walk_length: 71
+    walks_per_node: 9
+    p: 0.481
+    q: 0.720
+    context_size: 8
+    num_negatives: 3
+    restart: false
+    early_stopping_delta: 0.1
+    early_stopping_patience: 5
+    sets:
+        type: categorical
+        vals: ["0,20","1,22","2,24","3,26","4,28","5,30","6,32","7,34","8,36","9,38"]
+records_per_epoch: 231827
+searcher:
+    name: grid
+    metric: val_loss
+    smaller_is_better: true
+    max_length:
+        epochs: 70
+min_validation_period:
+    epochs: 1
+checkpoint_policy: none
+resources:
+    slots_per_trial: 1
+    resource_pool: rtx_pool
+entrypoint: src.model.hetero_embedding.deep_walk_embedder:DeepWalkEmbedder
+max_restarts: 0
+environment:
+  image: "sachinx0e/ikg:4.3"

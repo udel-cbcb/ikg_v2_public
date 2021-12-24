@@ -1,0 +1,38 @@
+name: Protein embedding task
+description: Task to generate protein embeddings
+bind_mounts:
+  - container_path: /root/data/ikg_v2_data
+    host_path: /home/sachin/Projects/ikg_v2_data
+    propagation: ''
+    read_only: true
+hyperparameters:
+    fold_n:
+        type: categorical
+        vals: ["0","1","2","3","4","5","6","7","8","9"]
+    global_batch_size: 128
+    embedding_dim: 96
+    learning_rate: 0.0007
+    walk_length: 92
+    walks_per_node: 7
+    p: 0.416
+    q: 0.821
+    context_size: 6
+    num_negatives: 5
+    early_stopping_delta: 0.001
+    early_stopping_patience: 10
+records_per_epoch: 2426
+searcher:
+    name: grid
+    metric: val_loss
+    smaller_is_better: true
+    max_length:
+        epochs: 1000
+min_validation_period:
+    epochs: 1
+checkpoint_policy: none
+resources:
+    slots_per_trial: 1
+entrypoint: src.model.protein_embedder:ProteinEmbedder
+max_restarts: 0
+environment:
+  image: "sachinx0e/ikg:3.3"

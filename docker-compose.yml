@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  ikg-dev:
+    image: "sachinx0e/ikg:4.8"
+    container_name: "ikg-dev"
+    tty: true
+    stdin_open: true
+    ipc: host
+    shm_size: 256m
+    volumes: 
+      - .:/root/workdir
+      - /data/ml_data/ikg_v2_data:/root/data/ikg_v2_data
+      - ~/docker/.ssh:/root/.ssh
+      - ~/docker/.vscode-server:/root/.vscode-server
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - capabilities: [gpu]
+    environment:
+      - DET_MASTER=ml-compute
+      - POLYAXON_HOST=http://ml-compute:30005
+      - POLYAXON_NO_OP=0

@@ -1,0 +1,13 @@
+pytorch-lightning==1.4.4
+loguru
+pandas
+numpy
+obonet==0.3.0
+scikit-learn==0.24.2
+networkx==2.6.2
+tensorboard==2.5.0
+tqdm
+p-tqdm
+
+# torch-rw
+#https://github.com/Sachinx0e/torch_random_walk/raw/0.0.6/dist/torch_rw-0.0.6-cp38-cp38-linux_x86_64.whl

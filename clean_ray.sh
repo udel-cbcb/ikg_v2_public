@@ -1,0 +1,1 @@
+rm -r ~/ray_results

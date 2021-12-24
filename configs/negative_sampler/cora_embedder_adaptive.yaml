@@ -1,0 +1,58 @@
+name: Cora trial adaptive
+description: Test if the inhouse node2vec algorithm can train on the cora dataset
+bind_mounts:
+  - container_path: /root/data/ikg_v2_data
+    host_path: /home/sachin/Projects/ikg_v2_data
+    propagation: ''
+    read_only: true
+hyperparameters:
+    global_batch_size: 128
+    learning_rate:
+        type: double
+        minval: 0.0001
+        maxval: 0.001
+    embedding_dim:
+        type: categorical
+        vals: [64,80,96,128,256]
+    walk_length:
+        type: int
+        minval: 60
+        maxval: 140
+    walks_per_node:
+        type: int
+        minval: 5
+        maxval: 10
+    p:
+        type: double
+        minval: 0.1
+        maxval: 1.0
+    q:
+        type: double
+        minval: 0.1
+        maxval: 1.0
+    context_size:
+        type: categorical
+        vals: [6,8,10,12,16,20]
+    num_negatives:
+        type: int
+        minval: 2
+        maxval: 6
+    model_type: cb
+    early_stopping_patience: 10
+    early_stopping_delta: 0.0001
+records_per_epoch: 2437
+searcher:
+    name: adaptive_asha
+    metric: roc_score
+    smaller_is_better: false
+    max_length:
+        epochs: 150
+    max_trials: 50
+min_validation_period:
+        epochs: 1
+resources:
+    slots_per_trial: 1
+entrypoint: src.model_tests.cora_embedder:CoraEmbedderTrial
+max_restarts: 0
+environment:
+  image: "sachinx0e/ikg:4.7"

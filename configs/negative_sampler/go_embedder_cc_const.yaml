@@ -1,0 +1,37 @@
+name: GO embedder CC task
+description: Task to train the model with best hyper-params for GO CC embedding
+bind_mounts:
+  - container_path: /root/data/ikg_v2_data
+    host_path: /home/sachin/Projects/ikg_v2_data
+    propagation: ''
+    read_only: true
+data:
+    go_type: "cc"
+hyperparameters:
+    global_batch_size: 128
+    embedding_dim: 64
+    learning_rate: 0.0007
+    walk_length: 120
+    walks_per_node: 7
+    p: 0.538
+    q: 0.662
+    context_size: 12
+    num_negatives: 3
+    early_stopping_delta: 0.001
+    early_stopping_patience: 10
+records_per_epoch: 3761
+searcher:
+    name: single
+    metric: val_loss
+    smaller_is_better: true
+    max_length:
+        epochs: 300
+min_validation_period:
+    epochs: 1
+checkpoint_policy: none
+resources:
+    slots_per_trial: 1
+entrypoint: src.model.go_embedder:GoEmbedder
+max_restarts: 0
+environment:
+  image: "sachinx0e/ikg:3.2"

@@ -1,0 +1,34 @@
+name: RGCN embedding
+description: Task to create embedding using RGCN on hetero graph
+bind_mounts:
+  - container_path: /root/data/ikg_v2_data
+    host_path: /home/sachin/Projects/ikg_v2_data
+    propagation: ''
+    read_only: true
+data:
+    fold_n: "0"
+hyperparameters:
+    global_batch_size: 256
+    learning_rate: 0.01
+    embedding_dim: 128
+    dropout: 0.2
+    num_blocks: 4
+    num_negatives: 1
+    early_stopping_delta: 0.01
+    early_stopping_patience: 10
+records_per_epoch: 80000
+searcher:
+    name: single
+    metric: val_loss
+    smaller_is_better: true
+    max_length:
+        epochs: 500
+min_validation_period:
+    epochs: 1
+checkpoint_policy: none
+resources:
+    slots_per_trial: 1
+entrypoint: src.model.hetero_embedding.rgcn_embedder:RGCNEmbedder
+max_restarts: 0
+environment:
+  image: "sachinx0e/ikg:4.4"

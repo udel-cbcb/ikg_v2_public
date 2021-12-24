@@ -1,0 +1,57 @@
+name: ConvKB embedding
+description: Task to create embedding using ConKB on hetero graph
+bind_mounts:
+  - container_path: /root/data/ikg_v2_data
+    host_path: /home/sachin/Projects/ikg_v2_data
+    propagation: ''
+    read_only: true
+data:
+    fold_n: "0"
+hyperparameters:
+    global_batch_size: 
+        type: categorical
+        vals: [64,80,96,128,256,320]
+    learning_rate:
+        type: double
+        minval: 0.0001
+        maxval: 0.001
+    embedding_dim:
+        type: categorical
+        vals: [64,80,96,128,256,320]
+    out_channels:
+        type: categorical
+        vals: [16,32,64,128]
+    kernel_size: 
+        type: categorical
+        vals: [16,32,64,128]
+    dropout: 
+        type: double
+        minval: 0.1
+        maxval: 0.5
+    lmbda:
+        type: double
+        minval: 0.001
+        maxval: 0.5
+    num_negatives: 
+        type: int
+        minval: 2
+        maxval: 8
+    early_stopping_delta: 0.01
+    early_stopping_patience: 10
+records_per_epoch: 3897
+searcher:
+    name: adaptive_asha
+    metric: roc_link_pred
+    smaller_is_better: false
+    max_length:
+        epochs: 50
+    max_trials: 50
+min_validation_period:
+    epochs: 1
+checkpoint_policy: none
+resources:
+    slots_per_trial: 1
+entrypoint: src.model.hetero_embedding.conv_kb_embedder:ConvKBEmbedder
+max_restarts: 0
+environment:
+  image: "sachinx0e/ikg:4.3"

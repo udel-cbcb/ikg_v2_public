@@ -1,0 +1,37 @@
+name: GO embedder MF task
+description: Task to train the model with best hyper-params for GO MF embedding
+bind_mounts:
+  - container_path: /root/data/ikg_v2_data
+    host_path: /home/sachin/Projects/ikg_v2_data
+    propagation: ''
+    read_only: true
+data:
+    go_type: "mf"
+hyperparameters:
+    global_batch_size: 128
+    embedding_dim: 96
+    learning_rate: 0.0009
+    walk_length: 105
+    walks_per_node: 8
+    p: 0.573
+    q: 0.927
+    context_size: 12
+    num_negatives: 2
+    early_stopping_delta: 0.001
+    early_stopping_patience: 10
+records_per_epoch: 10050
+searcher:
+    name: single
+    metric: val_loss
+    smaller_is_better: true
+    max_length:
+        epochs: 300
+min_validation_period:
+    epochs: 1
+checkpoint_policy: none
+resources:
+    slots_per_trial: 1
+entrypoint: src.model.go_embedder:GoEmbedder
+max_restarts: 0
+environment:
+  image: "sachinx0e/ikg:3.2"

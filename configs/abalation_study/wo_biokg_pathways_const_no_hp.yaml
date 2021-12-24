@@ -1,0 +1,41 @@
+name: WO BioKG Pathways Embedding (NO_HP)
+description: Task to perform embedding for WO BioKG Pathways feature analysis without HP
+bind_mounts:
+  - container_path: /root/data/ikg_v2_data
+    host_path: /data/ml_data/ikg_v2_data
+    propagation: ''
+    read_only: true
+data:
+    feature_type: "wo_biokg_pathways"
+    sample_targets: false
+hyperparameters:
+    global_batch_size: 128
+    embedding_dim: 256
+    learning_rate: 0.0004
+    walk_length: 17
+    walks_per_node: 6
+    context_size: 2
+    num_negatives: 5
+    edge_op: hd
+    early_stopping_delta: 0.001
+    early_stopping_patience: 10
+    sets:
+        type: categorical
+        vals: ["0,20","1,22","2,24","3,26","4,28"]
+records_per_epoch: 254460
+searcher:
+    name: grid
+    metric: val_loss
+    smaller_is_better: true
+    max_length:
+        epochs: 50
+min_validation_period:
+    epochs: 1
+checkpoint_policy: none
+resources:
+    slots_per_trial: 1
+    resource_pool: lab_pool
+entrypoint: src.model.abalation_study.triple_walk_embedder:TripleWalkEmbedder
+max_restarts: 0
+environment:
+  image: "sachinx0e/ikg:4.8"

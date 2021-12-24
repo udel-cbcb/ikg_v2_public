@@ -1,0 +1,39 @@
+version: 1.1
+kind: component
+tags: [rf,negative_sampler]
+name: rf-hyper-param-tuning
+
+inputs:
+- name: model_type
+  type: str
+  isOptional: true
+  value: tree
+
+- name: sampler_type
+  type: str
+  isOptional: true
+  value: random_sampler
+
+outputs:
+- name: best_params
+  type: dict
+- name: best_score
+  type: float
+
+
+run:
+  kind: job
+  init:
+      - connection: "ikg-v2-data"
+  connections: [ikg-v2-data,slack-trainer,slack-trainer-wh]
+  container:
+    image: sachinx0e/ikg:3.5
+    workingDir: "{{ globals.run_artifacts_path }}/uploads"
+    command: ["python", "-m", "src.experiment.negative_sampler_tune",]
+    args: "{{ params.as_args }}"
+    env:
+      - name: webhook_url
+        value: "https://hooks.slack.com/services/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"
+    resources:
+      limits:
+        nvidia.com/gpu: 0

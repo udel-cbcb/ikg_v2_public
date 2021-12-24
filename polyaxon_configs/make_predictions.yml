@@ -1,0 +1,20 @@
+version: 1.1
+kind: component
+tags: [bioinformatics_analysis, predictions]
+name: make_predictions
+
+run:
+  kind: job
+  init:
+      - connection: "ikg-v2-data"
+  connections: [ikg-v2-data]
+  container:
+    image: sachinx0e/ikg:4.8
+    workingDir: "{{ globals.run_artifacts_path }}/uploads"
+    command: ["python", "-m", "src.data.bioinformatic_analysis.make_predictions"]
+    env:
+      - name: webhook_url
+        value: "https://hooks.slack.com/services/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"
+    resources:
+      limits:
+        nvidia.com/gpu: 0

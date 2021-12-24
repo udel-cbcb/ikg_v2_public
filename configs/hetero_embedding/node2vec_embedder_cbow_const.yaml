@@ -1,0 +1,42 @@
+name: Node2Vec CBOW hetero embedding (MUL_SEEDS)
+description: Task to generate hetero embeddings using multiple seeds
+bind_mounts:
+  - container_path: /root/data/ikg_v2_data
+    host_path: /data/ml_data/ikg_v2_data
+    propagation: ''
+    read_only: true
+data:
+    sample_targets: false
+hyperparameters:
+    global_batch_size: 128
+    embedding_dim: 256
+    learning_rate: 0.0008
+    walk_length: 79
+    walks_per_node: 8 
+    p: 0.51
+    q: 0.44
+    context_size: 6
+    num_negatives: 2
+    restart: false
+    early_stopping_delta: 0.001
+    early_stopping_patience: 10
+    sets:
+        type: categorical
+        vals: ["0,20","1,22","2,24","3,26","4,28","5,30","6,32","7,34","8,36","9,38"]
+records_per_epoch: 231876
+searcher:
+    name: grid
+    metric: val_loss
+    smaller_is_better: true
+    max_length:
+        epochs: 50
+min_validation_period:
+    epochs: 1
+checkpoint_policy: none
+resources:
+    slots_per_trial: 1
+    resource_pool: lab_pool
+entrypoint: src.model.hetero_embedding.deep_walk_embedder_cbow:DeepWalkEmbedderCBow
+max_restarts: 0
+environment:
+  image: "sachinx0e/ikg:4.8"
