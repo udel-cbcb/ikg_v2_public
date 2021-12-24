@@ -28,7 +28,7 @@
 wget https://research.bioinformatics.udel.edu/iptmnet_data/downloads/ikg_v2_data.tar.gz
 
 # extract to /data/ml_data/ikg_v2_data
-tar -xf ikg_v2_data r -C /data/ml_data/ikg_v2_data
+tar -xf ikg_v2_data.tar.gz r -C /data/ml_data/ikg_v2_data
 ```
 
 2. Before starting the experiments, you need to build the docker containers.
