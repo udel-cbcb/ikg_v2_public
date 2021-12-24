@@ -1,22 +1,24 @@
 # Getting started
 
 ### Requirements
-1. Docker - 20.10.10
-2. Determined AI - 0.17.2
-3. Polyxon CE - 1.11.2 
+1. [Docker](https://docs.docker.com/engine/install/debian/) - 20.10.10
+2. [Determined AI](https://github.com/determined-ai/determined) - 0.17.2
+3. [Polyxon CE](https://github.com/polyaxon/polyaxon) - 1.11.2 
 4. RAM - 64 GB
 5. CPU - 16 cores
-5. GPU with support for CUDA 10 and atleast 16 GB memory (RTX A4000)
+5. Nvidia GPU with support for atleast CUDA 10.0 and atleast 16 GB memory (RTX A4000)
 
 <br />
 
 ### Folder Structure
-`src/data` - Source code of the scripts used for generating data for experiments. \
-`src/models` - Source code of the unsupervised models described in the study. \
-`src/experiments` - Source code of the supervised models described in the study. \
-`configs` - Determined configuration files for running experiments on the determined cluster. \
-`polyaxon_configs` - Polyaxon configuration files for running experiments on the k8s cluster. \
-`main.py` - Entry point script used to run scripts locally.
+| | |
+|---|---|
+| `src/data` | Source code of the scripts used for generating data for experiments. |
+| `src/models` | Source code of the unsupervised models described in the study. |
+| `src/experiments` | Source code of the supervised models described in the study. |
+| `configs` | Determined configuration files for running experiments on the determined cluster. |
+| `polyaxon_configs` | Polyaxon configuration files for running experiments on the k8s cluster. |
+| `main.py` | Entry point script used to run scripts locally. |
 
 <br />
 
