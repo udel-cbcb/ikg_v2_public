@@ -71,3 +71,9 @@ python src/main.py --c "make_predictions"
 
 # After the task completes, check for a file named `predicted_edges.csv` in the root folder of this project.
 ``` 
+
+
+### Data and predictions.
+
+1. Data : https://research.bioinformatics.udel.edu/iptmnet_data/downloads/ikg_v2_data.tar.gz
+1. Predictions: https://github.com/udel-cbcb/ikg_v2_public/releases/tag/1.0.0
