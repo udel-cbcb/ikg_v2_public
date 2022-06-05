@@ -9,14 +9,14 @@ services:
     shm_size: 256m
     volumes: 
       - .:/root/workdir
-      - /data/ml_data/ikg_v2_data:/root/data/ikg_v2_data
+      - /home/sachin/Projects/molecular_omics/ikg_v2_data:/root/data/ikg_v2_data
       - ~/docker/.ssh:/root/.ssh
       - ~/docker/.vscode-server:/root/.vscode-server
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - capabilities: [gpu]
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      devices:
+    #      - capabilities: [gpu]
     environment:
       - DET_MASTER=ml-compute
       - POLYAXON_HOST=http://ml-compute:30005

@@ -16,10 +16,13 @@ def predict():
 
      # save the git hash of data used to run the command
     data_parent = f"{Path.home()}/data/ikg_v2_data"
+    
+    """
     git_hash = utils.get_git_hash(data_parent)
     logger.info(f"Hash of data: {git_hash}")
     with open("data_hash.txt", "w") as text_file:
         text_file.write(git_hash)
+    """
 
     data_dir = f"{Path.home()}/data/ikg_v2_data/bioinformatics_analysis"
 
@@ -101,7 +104,13 @@ def predict():
 def make_predictions(clf, protein_head_embedding, protein_tail_embedding, proteins, data_dir):
     
     # load idg kinases
-    target_kinases = pd.read_csv(f"{data_dir}/processed/target_kinases.csv")["kinase"].to_list()
+    target_kinases = pd.read_csv(f"{data_dir}/processed/human_kinases.csv")["kinase"].to_list()
+
+    # keep only kinases that are in proteins list
+    def is_in_proteins(kinase):
+        return kinase in proteins
+
+    target_kinases = list(filter(is_in_proteins,target_kinases))
 
     # make possible edges
     possible_edges_indexed = []

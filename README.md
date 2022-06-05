@@ -66,8 +66,8 @@ det experiment create configs/triples_walk_embedder_const_mul_seeds.yaml .
 polyaxon run -p ikg_v2 -f ./polyaxon_configs/make_predictions.yml -u
 
 # run the prediction task locally
-export POLYAXON_NO_OP=0
-python src/main.py -c "make_predictions"
+export POLYAXON_NO_OP=1
+python src/main.py --c "make_predictions"
 
 # After the task completes, check for a file named `predicted_edges.csv` in the root folder of this project.
 ``` 
