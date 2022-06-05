@@ -13,7 +13,7 @@
 ### Folder Structure
 | | |
 |---|---|
-| `src/data` | Source code of the scripts used for generating data for experiments. |
+| `src/data` | Source code of the scripts used to generate data for experiments. |
 | `src/models` | Source code of the unsupervised models described in the study. |
 | `src/experiments` | Source code of the supervised models described in the study. |
 | `configs` | Determined configuration files for running experiments on the determined cluster. |
