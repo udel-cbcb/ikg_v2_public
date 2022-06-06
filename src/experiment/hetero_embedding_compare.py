@@ -11,7 +11,7 @@ from tqdm import tqdm
 from src.misc.notify_wh import notify_wh
 import src.misc.utils as utils
 import copy
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, precision_score, recall_score
 
 tracking.init()
 
@@ -38,12 +38,14 @@ def train():
     data_parent = f"{Path.home()}/data/ikg_v2_data"
     data_dir = f"{data_parent}/hetero_embedding"
 
+    """
     # save the git hash of data used to run the command
     git_hash = utils.get_git_hash(data_parent)
     logger.info(f"Hash of data: {git_hash}")
     with open("data_hash.txt", "w") as text_file:
         text_file.write(git_hash)
-   
+    """
+
     # load proteins
     proteins = pd.read_csv(f"{data_dir}/processed/proteins.csv")["protein"].to_list()
 
@@ -61,21 +63,23 @@ def train():
             for task_type in task_types:
 
                 if task_type == "edge_pred":
-                    au_roc = _perform_edge_prediction(model_type,data_dir,fold_n,seed,proteins)
+                    scores = _perform_edge_prediction(model_type,data_dir,fold_n,seed,proteins)
                 elif task_type == "clf_kinase_substrate":
-                    au_roc = _perform_clf_kinase_substrate(model_type,data_dir,fold_n,seed,proteins)
+                    scores = _perform_clf_kinase_substrate(model_type,data_dir,fold_n,seed,proteins)
                 elif task_type == "clf_ec":
-                    au_roc = _perform_clf_ec(model_type,data_dir,fold_n,seed,proteins)
+                    scores = _perform_clf_ec(model_type,data_dir,fold_n,seed,proteins)
                 elif task_type == "clf_ec_full":
-                    au_roc = _perform_clf_ec_full(model_type,data_dir,fold_n,seed,proteins)
+                    scores = _perform_clf_ec_full(model_type,data_dir,fold_n,seed,proteins)
 
 
-                logger.info(f"AU-ROC : {model_type} / fold_{fold_n} : {au_roc}")
 
-                results.append((fold_n,model_type,task_type,au_roc))
+                logger.info(f"AU-ROC : {model_type} / fold_{fold_n} : {scores}")
+                
+                for score_type,score_val in scores.items():
+                    results.append((fold_n,model_type,task_type,score_type,score_val))
             
  
-    results_df = pd.DataFrame.from_records(data=results,columns=["fold","model_type","task_type","au_roc"])
+    results_df = pd.DataFrame.from_records(data=results,columns=["fold","model_type","task_type","score_type","score_val"])
     results_df.to_csv("results.csv",index=False)
 
     tracking.log_dataframe(results_df,"results")
@@ -137,11 +141,20 @@ def _perform_edge_prediction(model_type,data_dir,fold_n,seed,proteins):
 
     logger.info("Predicting")
     y_predicted_proba = clf.predict_proba(test_edge_embedding)
+    y_predicted_disc = clf.predict(test_edge_embedding)
 
     # calculate avg precision
     au_roc = roc_auc_score(test_labels,y_predicted_proba[:,1])
+    precision = precision_score(test_labels,y_predicted_disc)
+    recall = recall_score(test_labels,y_predicted_disc)
 
-    return au_roc
+    scores = {
+        "au_roc": au_roc,
+        "precision": precision,
+        "recall": recall
+    }
+
+    return scores
 
 
 def _perform_clf_ec(model_type,data_dir,fold_n,seed,proteins):
@@ -185,11 +198,20 @@ def _perform_clf_ec(model_type,data_dir,fold_n,seed,proteins):
     clf = RandomForestClassifier(random_state=seed).fit(X_train,y_train)
 
     y_predicted_proba = clf.predict_proba(X_test)
-    
+    y_predicted_disc = clf.predict(X_test)
+
     # calculate avg precision
     au_roc = roc_auc_score(y_test,y_predicted_proba[:,1])
+    precision = precision_score(y_test,y_predicted_disc)
+    recall = recall_score(y_test,y_predicted_disc)
 
-    return au_roc
+    scores = {
+        "au_roc": au_roc,
+        "precision": precision,
+        "recall": recall
+    }
+
+    return scores
 
 def _perform_clf_ec_full(model_type,data_dir,fold_n,seed,proteins):
     data_dir = f"{Path.home()}/data/ikg_v2_data/hetero_embedding"
@@ -233,10 +255,21 @@ def _perform_clf_ec_full(model_type,data_dir,fold_n,seed,proteins):
 
     y_predicted_proba = clf.predict_proba(X_test)
     
+    y_predicted_proba = clf.predict_proba(X_test)
+    y_predicted_disc = clf.predict(X_test)
+
     # calculate avg precision
     au_roc = roc_auc_score(y_test,y_predicted_proba[:,1])
+    precision = precision_score(y_test,y_predicted_disc)
+    recall = recall_score(y_test,y_predicted_disc)
 
-    return au_roc
+    scores = {
+        "au_roc": au_roc,
+        "precision": precision,
+        "recall": recall
+    }
+
+    return scores
 
 def _perform_clf_kinase_substrate(model_type,data_dir,fold_n,seed,proteins):
     data_dir = f"{Path.home()}/data/ikg_v2_data/hetero_embedding"
@@ -280,10 +313,21 @@ def _perform_clf_kinase_substrate(model_type,data_dir,fold_n,seed,proteins):
 
     y_predicted_proba = clf.predict_proba(X_test)
     
+    y_predicted_proba = clf.predict_proba(X_test)
+    y_predicted_disc = clf.predict(X_test)
+
     # calculate avg precision
     au_roc = roc_auc_score(y_test,y_predicted_proba[:,1])
+    precision = precision_score(y_test,y_predicted_disc)
+    recall = recall_score(y_test,y_predicted_disc)
 
-    return au_roc
+    scores = {
+        "au_roc": au_roc,
+        "precision": precision,
+        "recall": recall
+    }
+
+    return scores
 
 def _get_combined_embeding(head_embedding,tail_embedding):
     return np.concatenate((head_embedding,tail_embedding),axis=1)
