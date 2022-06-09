@@ -78,6 +78,9 @@ elif command == "generate_analysis_candidates":
 elif command == "build_test_edges_compare":
     os.system("python -m src.data.bioinformatic_analysis.build_test_edges_compare")
 
+elif command == "perform_comparision":
+    os.system("python -m src.data.bioinformatic_analysis.perform_comparision")
+
 ################ EXPERIMENT ###########
 elif command == "negative_sampler_compare":
     os.system("python -m src.experiment.negative_sampler_compare")

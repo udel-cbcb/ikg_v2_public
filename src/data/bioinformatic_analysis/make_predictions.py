@@ -86,7 +86,7 @@ def predict():
     logger.info(f"Best params are: {rf_grid.best_params_}")
 
     logger.info("Training edge predictor")
-    clf = RandomForestClassifier(random_state=seed,n_jobs=6,**rf_grid.best_params_)
+    clf = RandomForestClassifier(random_state=seed,n_jobs=24,**rf_grid.best_params_)
     clf = clf.fit(X=train_edge_embedding,y=train_labels)
 
     logger.info("Predicting")
@@ -98,7 +98,7 @@ def predict():
     logger.info(f"Training score is : {au_roc}")
 
     # make predictions
-    make_predictions(clf,protein_head_embedding,protein_tail_embedding,proteins,data_dir)
+    # make_predictions(clf,protein_head_embedding,protein_tail_embedding,proteins,data_dir)
 
 
 def make_predictions(clf, protein_head_embedding, protein_tail_embedding, proteins, data_dir):
